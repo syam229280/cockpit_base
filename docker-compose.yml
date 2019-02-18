@@ -6,24 +6,44 @@ networks:
     driver: bridge     
 services:
   cms:
-    image: agentejo/cockpit
+    build: 
+      context: ./
+      dockerfile: ./Dockerfile
     environment:
       COCKPIT_SESSION_NAME: cockpit
       COCKPIT_SALT: _create_your_own_
-      COCKPIT_DATABASE_SERVER: 'mongodb://db:27017'
+      COCKPIT_DATABASE_SERVER: 'mongodb://mongo:27017'
       COCKPIT_DATABASE_NAME: cockpit_master
+      COCKPIT_DATABASE_USERNAME: root
+      COCKPIT_DATABASE_PASSWORD: example
     depends_on:
-      - db
+      - mongo
     ports:
       - "8089:80"
     networks:
       - cockpit_network
+    volumes: 
+      - ./:/var/www/html  
 
-  db:
+  mongo:
    container_name: cpit_db
-   image: mongo:latest     
+   image: mongo:latest
+   restart: always     
    volumes:
       - mongo_data:/data/db
    networks:
-     - cockpit_network      
+     - cockpit_network
+   environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
 
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+     - 8088:8081
+    networks:
+     - cockpit_network
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example     
