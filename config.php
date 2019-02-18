@@ -17,7 +17,11 @@ if (!empty(getenv('COCKPIT_I18N'))){
 if (!empty(getenv('COCKPIT_DATABASE_SERVER'))){
   $configs['database'] = [
     "server"  => getenv('COCKPIT_DATABASE_SERVER'),
-    "options" => ["db" => getenv('COCKPIT_DATABASE_NAME')]
+    "options" => [
+      "db" => getenv('COCKPIT_DATABASE_NAME'),
+      "username" => getenv('COCKPIT_DATABASE_USERNAME'),
+      "password" => getenv('COCKPIT_DATABASE_PASSWORD'),
+      ]
   ];
 }
 
